@@ -1,0 +1,27 @@
+FROM ubuntu:14.04
+
+MAINTAINER Paixon GmbH
+
+# Environment Variables
+ENV TEAMCITY_PACKAGE TeamCity-9.1.5.tar.gz 
+ENV TEAMCITY_DOWNLOAD http://download.jetbrains.com/teamcity 
+ENV TEAMCITY_DATA_PATH /etc/teamcity/data/
+
+# Update system
+RUN apt-get update
+
+# Install Java(JRE)
+RUN apt-get install -y openjdk-7-jre
+
+# Install wget
+RUN  apt-get install -y wget
+
+# Download and extract TeamCity to /opt
+RUN wget $TEAMCITY_DOWNLOAD/$TEAMCITY_PACKAGE && \
+    tar zxf $TEAMCITY_PACKAGE -C /opt && \
+    rm -rf $TEAMCITY_PACKAGE
+
+EXPOSE 8111 
+
+ADD runserver.sh /runserver.sh
+CMD ["/runserver.sh"]

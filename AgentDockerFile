@@ -1,0 +1,19 @@
+FROM ubuntu:14.04
+
+MAINTAINER Paixon GmbH
+
+RUN apt-get update
+
+# Install Java.
+RUN apt-get install -y openjdk-7-jdk
+
+# Install unzip
+RUN apt-get install -y unzip 
+
+# Install wget
+RUN  apt-get install -y wget
+
+RUN adduser teamcity
+
+ADD runagent.sh /home/teamcity/runagent.sh
+CMD ["/home/teamcity/runagent.sh"]

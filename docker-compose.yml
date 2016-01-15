@@ -1,0 +1,43 @@
+mysql:
+  image: "sameersbn/mysql:latest"
+  volumes: 
+    - "/home/yourUser/pathToStoreOnHostSystem/TeamCityDatabase:/var/lib/mysql"
+  environment:
+    - "DB_USER=MyUser"
+    - "DB_PASS=MyPass"
+    - "DB_NAME=teamcity"
+  ports:
+    - "3306:3306"
+
+server: 
+  build: .
+  dockerfile: ServerDockerFile
+  ports:
+    - "8111:8111"
+  environment:
+    - "DB_USER=MyUser"
+    - "DB_PASS=MyPass"
+    - "DB_NAME=teamcity"
+  volumes:
+    - "/home/yourUser/pathToStoreOnHostSystem/TeamCity:/etc/teamcity/data/"
+  links:
+    - mysql
+
+agent1:
+  build: .
+  dockerfile: AgentDockerFile
+  links:
+    - server
+
+agent2:
+  build: .
+  dockerfile: AgentDockerFile
+  links:
+    - server
+
+agent3:
+  build: .
+  dockerfile: AgentDockerFile
+  links:
+    - server
+
